@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="./js/jquery.miniBox.js"></script>
+	<script type="text/javascript" src="./js/colorPicker.js"></script>
+</head>
+<body>
+	<h2>jQuery Mini提示框+HTML5 Canvas 绘制的颜色选择器</h2>
+	<div style="margin-left:40px; line-height:30px; font-size:14px;">
+		<a href="javascript:;" id="confirm">mini确认框</a> <span id="confirm_info"></span><br>
+		<a href="javascript:;" id="point">mini提示框</a><br>
+		
+		<form action="" id="post_form">
+			<input name="content" value="提交内容">
+			<a href="javascript:;" id="ajax">提交ajax请求</a><br>
+		</form>
+		
+		<a href="javascript:;" id="color">颜色选择器</a> <span id="color_info">当前颜色</span><br>
+	</div>
+	<script type="text/javascript">
+		
+		$(function(){
+			// 确认
+			$("#confirm").click(function() {
+				var callback = function() {
+					$("#confirm_info").html("YES").css("color", "green");
+					$.fn.closeMiniBox(0);
+				},
+				noCallback = function() {
+					$("#confirm_info").html("NO").css("color", "red");
+					$.fn.closeMiniBox(0);
+				}
+				
+				$(this).miniConfirm({msg:"确认吗?", callback:callback, noCallback:noCallback, color:"red"});
+			});
+			
+			// 提示
+			$("#point").click(function() {
+				var callback = function() {
+					$.fn.closePublicBox(0);
+				}
+				
+				$(this).pointMsg({msg:"注册成功!3秒后关闭", callback:callback, color:"green", autoClose:true});
+			});
+			
+			// AJAX 请求
+			$("#ajax").click(function() {
+				var callback = function(data) {
+					// Do something here
+				}
+				
+				$(this).publicAjaxPost({url:"ajax.php", callback:callback, formId:"post_form", autoClose:false});
+			});
+			
+			// 颜色选择
+			$("#color").click(function() {
+				var html = '<div id="colorPickBox"></div>',
+					callback = function() {};
+				$(this).showMiniBox({content:html, callback:callback, width:305, showButton:false});
+				
+				$("#colorPickBox").colorPicker({
+					callFun: function(color) {
+						$("#color_info").css("color", "#"+color);
+						$("#"+$.fn.miniBoxId).hide();
+					}
+				});
+			});
+			
+		});
+		
+	</script>
+</body>
+</html>
