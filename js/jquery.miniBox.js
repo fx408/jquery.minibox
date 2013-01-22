@@ -69,7 +69,9 @@
 		if(!string) return;
 		
 		var styleNode = $('<style type="text/css">'+string+'</style>');
-		if($(document).find("head").length) $(document).find("head").append(styleNode);
+		var head = $(document).find("head");
+		
+		if(head.length) head.append(styleNode);
 		else $(document).append(styleNode);
 	}
 	
@@ -142,7 +144,7 @@
 	}
 	
 	// 注册插件所需的样式
-	function regPublicBoxCss() {
+	function regBoxCss() {
 		var string = miniBoxId+' {'
 				+'position: absolute; font-size:12px; font-family:"Microsoft Yahei",Arial,Helvetica,sans-serif,"宋体"; color:#333'
 				+'width: 150px; padding: 7px 5px 5px; text-align: center; line-height: 19px;'
@@ -153,7 +155,7 @@
 				+'transition: -webkit-box-shadow linear .2s;}'
 				+miniBoxId+' .input_btn{cursor:pointer; height: 22px;padding: 1px 6px; color:#333; line-height:100%; float:none}';
 		
-		if($.browser.msie && $.browser.version < 9) string += miniBoxId+'{border:1px solid #999;}';
+		//if($.browser.msie && $.browser.version < 9) string += miniBoxId+'{border:1px solid #999;}';
 		
 		$.fn.regCSSWithString(string);
 	}
@@ -188,27 +190,19 @@
 	'<input value="取消" type="button" class="input_btn" name="no">'+
 	'</div>';
 	
-	$.fn.tableColor = function(table, options) {
-		var opts = $.extend({}, {odd:'odd', even:'even'}, options);
-		table = typeof table == 'string' ? $("#"+table) : $(table);
-		
-		table.find("tbody tr:visible:even").removeClass().addClass(opts.odd)
-		.end().find("tbody tr:visible:odd").removeClass().addClass(opts.even);
-	}
-	
 	/**
 	 * 插件 初始化
 	 */
 	$(function() {
-	 	regPublicBoxCss();
+	 	regBoxCss();
 		if(!$(miniBoxId).length) $("body").append(boxHtml);
 		$(miniBoxId).appendTo("body");
 		
 		// 绑定 确认 和 取消按钮的 点击事件
-		$(miniBoxId).find("input[name=yes]").unbind("click").live("click", function() {
+		$(miniBoxId).find("input[name=yes]").on("click", function() {
 			typeof boxButtonYesEvent === "function" ? boxButtonYesEvent() : $.fn.closeMiniBox(0);
 		})
-		.end().find("input[name=no]").unbind("click").live("click", function() {
+		.end().find("input[name=no]").on("click", function() {
 			typeof boxButtonNoEvent === "function" ? boxButtonNoEvent() : $.fn.closeMiniBox(0);
 		});
 	});
