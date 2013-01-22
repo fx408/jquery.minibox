@@ -119,7 +119,7 @@
 				pointMsg(obj, {msg:data.msg});
 			}
 			allowAjaxPost = true;
-		}
+		};
 		
 		var error = function() {
 			pointMsg(obj, {msg:'请求失败！'});
@@ -127,7 +127,7 @@
 				opts.errorCall();
 			}
 			allowAjaxPost = true;
-		}
+		};
 		
 		var postData = null;
 		if(typeof opts.formId == 'string') opts.formId = "#"+opts.formId;
@@ -151,11 +151,10 @@
 				+'border:0px; isplay:none;z-index: 20; background-color: #f8f8f8;'
 				+'border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;'
 				+'box-shadow: 0px 0px 8px rgba(11,11,11, .7);'
+				+'border:1px solid #999;'
 				+'-moz-transition: -moz-box-shadow linear .2s;-webkit-transition: -webkit-box-shadow linear .2s;'
 				+'transition: -webkit-box-shadow linear .2s;}'
 				+miniBoxId+' .input_btn{cursor:pointer; height: 22px;padding: 1px 6px; color:#333; line-height:100%; float:none}';
-		
-		//if($.browser.msie && $.browser.version < 9) string += miniBoxId+'{border:1px solid #999;}';
 		
 		$.fn.regCSSWithString(string);
 	}
