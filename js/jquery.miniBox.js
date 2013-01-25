@@ -148,12 +148,13 @@
 		var string = miniBoxId+' {'
 				+'position: absolute; font-size:12px; font-family:"Microsoft Yahei",Arial,Helvetica,sans-serif,"宋体"; color:#333'
 				+'width: 150px; padding: 7px 5px 5px; text-align: center; line-height: 19px;'
-				+'border:0px; isplay:none;z-index: 20; background-color: #f8f8f8;'
+				+'isplay:none;z-index: 20; background-color: #f8f8f8;'
 				+'border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;'
 				+'box-shadow: 0px 0px 8px rgba(11,11,11, .7);'
-				+'border:1px solid #999;'
+				+'_border:1px solid #999; *border:1px solid #999; border:1px solid #999999\0; '
 				+'-moz-transition: -moz-box-shadow linear .2s;-webkit-transition: -webkit-box-shadow linear .2s;'
 				+'transition: -webkit-box-shadow linear .2s;}'
+				+miniBoxId+':active{box-shadow: 0px 0px 8px rgba(11,11,11, .3);}'
 				+miniBoxId+' .input_btn{cursor:pointer; height: 22px;padding: 1px 6px; color:#333; line-height:100%; float:none}';
 		
 		$.fn.regCSSWithString(string);
