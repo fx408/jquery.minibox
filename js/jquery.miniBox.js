@@ -33,25 +33,6 @@
 		return publicAjaxPost(this, options);
 	}
 	
-	function showMiniBox(obj, options) {
-		var opts = $.extend({}, defaults, options);
-		if(typeof opts.width != 'number' || opts.width <= 0) opts.width = 250;
-		
-		$(miniBoxId).children("span").html(opts.content);
-		opts.showButton ? $(miniBoxId).find("input").show() : $(miniBoxId).find("input").hide();
-
-		// 避免提示框 超出浏览器窗口范围
-		var ofs = $(obj).offset();
-		ofs.left = Math.min( $(window).width() - opts.width - 20 + $(window).scrollLeft(), ofs.left );
-		ofs.top = Math.min( $(window).height() + $(window).scrollTop() - $(miniBoxId).height() - 20, ofs.top );
-		$(miniBoxId).css({"top":ofs.top+"px", "left":ofs.left+"px", "width":opts.width+"px"}).fadeIn(180);
-		
-		if(opts.showButton) {
-			boxButtonYesEvent = opts.callback;
-			boxButtonNoEvent = opts.noCallback;
-		}
-	}
-	
 	/**
 	 * 关闭
 	 * @param time 延时毫秒，在time毫秒后关闭
@@ -73,6 +54,25 @@
 		
 		if(head.length) head.append(styleNode);
 		else $(document).append(styleNode);
+	}
+	
+	function showMiniBox(obj, options) {
+		var opts = $.extend({}, defaults, options);
+		if(typeof opts.width != 'number' || opts.width <= 0) opts.width = 250;
+		
+		$(miniBoxId).children("span").html(opts.content);
+		opts.showButton ? $(miniBoxId).find("input").show() : $(miniBoxId).find("input").hide();
+		
+		var fix = isFixed(obj),
+			ofs = getOffset(obj, opts, fix);
+
+		isFixed ? $(miniBoxId).appendTo($(fix)) : $(miniBoxId).appendTo("body");
+		$(miniBoxId).css({"top":ofs.top+"px", "left":ofs.left+"px", "width":opts.width+"px"}).fadeIn(180);
+		
+		if(opts.showButton) {
+			boxButtonYesEvent = opts.callback;
+			boxButtonNoEvent = opts.noCallback;
+		}
 	}
 	
 	function pointMsg(obj, options) {
@@ -158,6 +158,47 @@
 				+miniBoxId+' .input_btn{cursor:pointer; height: 22px;padding: 1px 6px; color:#333; line-height:100%; float:none}';
 		
 		$.fn.regCSSWithString(string);
+	}
+	
+	// 判断是否为 fixed 对象
+	function isFixed(obj) {
+		var parents = $(obj).parents(),
+			fix = false;
+		
+		for(var i = 0; i < parents.length; i++) {
+			var node = parents[i].nodeName || parents[i].localName || '';
+			
+			if(node.toLowerCase() == 'body') {
+				break;
+			}
+			
+			if($(parents[i]).css("position").toLowerCase() == 'fixed') {
+				fix = parents[i];
+				break;
+			}
+		}
+		
+		return fix;
+	}
+	
+	// 获取偏移量，避免提示框 超出浏览器窗口范围
+	function getOffset(obj, opts, parent) {
+		var ofs = $(obj).offset(),
+			minTop = $(window).height() + $(window).scrollTop() - $(miniBoxId).height() - 20,
+			minLeft = $(window).width() - opts.width - 20 + $(window).scrollLeft();
+		if(parent && $(parent).length) {
+			var parentOfs = $(parent).offset();
+			minTop -= parentOfs.top;
+			minLeft -= parentOfs.left;
+			
+			ofs.top -= parentOfs.top;
+			ofs.left -= parentOfs.left;
+		}
+		
+		ofs.left = Math.min(minLeft , ofs.left);
+		ofs.top = Math.min(minTop , ofs.top);
+		
+		return ofs;
 	}
 	
 	// 默认参数
